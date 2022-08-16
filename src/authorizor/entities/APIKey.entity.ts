@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class APIKey {
   @PrimaryGeneratedColumn()
-  id: number;
+  _id: number;
 
   @Column()
   appName: string;
