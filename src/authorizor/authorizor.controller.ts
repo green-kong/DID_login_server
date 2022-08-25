@@ -61,8 +61,14 @@ export class AuthorizorController {
   ) {
     const loginResult = await this.authorizorService.checkUser(loginDto);
     if (loginResult) {
-      res.cookie('DID_ACCESS_TOKEN', loginResult.accessToken);
-      res.cookie('DID_REFRESH_TOKEN', loginResult.refreshToken);
+      res.cookie('DID_ACCESS_TOKEN', loginResult.accessToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 2),
+      });
+      res.cookie('DID_REFRESH_TOKEN', loginResult.refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+      });
       res.redirect(redirectURI + `?code=${loginResult.code}`);
     } else {
       res.render('index', { error: '아이디와 비밀번호를 다시 확인해 주세요.' });

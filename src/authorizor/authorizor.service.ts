@@ -79,11 +79,9 @@ export class AuthorizorService {
       const { DID_ACCESS_TOKEN: accessToken, DID_REFRESH_TOKEN: refreshToken } =
         tokens;
 
-      const a = await this.cacheManager.set(hash, accessToken, {
+      await this.cacheManager.set(hash, accessToken, {
         ttl: 60 * 60 * 2,
       });
-
-      console.log(a);
 
       await this.loginRepository.save({ hash, refreshToken });
 
@@ -126,7 +124,6 @@ export class AuthorizorService {
 
     const hash = (await this.cacheManager.get(code)) as string;
     const accessToken = (await this.cacheManager.get(hash)) as string;
-    console.log(hash);
     const getUserInfoResult = await this.getUserInfoByHash(hash);
 
     if (getUserInfoResult) {

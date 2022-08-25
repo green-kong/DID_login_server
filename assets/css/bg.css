@@ -1,0 +1,26 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg, #071832 0%, #103c73 100%);
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}

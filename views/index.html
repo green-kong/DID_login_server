@@ -4,25 +4,64 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="http://localhost:8000/css/bg.css" />
+    <link rel="stylesheet" href="http://localhost:8000/css/header.css" />
+    <link rel="stylesheet" href="http://localhost:8000/css/loginFrm.css" />
+    <link rel="stylesheet" href="http://localhost:8000/css/footer.css" />
     <title>Document</title>
   </head>
   <body>
-    <h1>DID LOGIN</h1>
-    <form
-      id="login"
-      action="http://localhost:3000/authorizor/auth"
-      method="POST"
-    >
-      <ul>
-        <li>id:<input class="id" name="userId" type="text" /></li>
-        <li>pw:<input class="pw" name="userPw" type="text" /></li>
-        <button type="submit">로그인</button>
-        <p>{{error}}</p>
-      </ul>
-    </form>
+    <!-- Header -->
+    <div id="header">
+      <a href="http://localhost:8000"><h1 id="logo"></h1></a>
+
+      <ul id="nav"></ul>
+    </div>
+    <!-- Header End -->
+    <!-- Content -->
+    <div id="content">
+      <div class="content_title">
+        <div class="title_icon"></div>
+        <p class="title">Login to DID</p>
+      </div>
+      <form
+        id="loginFrm"
+        action="http://localhost:8000/authorizor/auth"
+        method="POST"
+      >
+        <ul>
+          <li>
+            <input class="id" name="userId" type="text" placeholder="Id" />
+          </li>
+          <li>
+            <input
+              class="pw"
+              name="userPw"
+              type="password"
+              placeholder="Password"
+            />
+          </li>
+          <button class="login_btn" type="submit">Log in</button>
+          <div class="border"></div>
+          <a href="회원가입" class="sign_up_btn">Sign up</a>
+          <p>{{error}}</p>
+        </ul>
+      </form>
+    </div>
+    <!-- Content End -->
+
+    <!-- Footer start -->
+    <div id="footer">
+      <div id="footer_container">
+        <div class="footer_logo"></div>
+        <div class="footer_title">DECENTRALIZED IDENTIFIER</div>
+      </div>
+    </div>
+    <!-- Footer End -->
   </body>
+
   <script>
-    const loginFrm = document.querySelector('#login');
+    const loginFrm = document.querySelector('#loginFrm');
     const url = location.href;
     loginFrm.action = url;
     console.log(url);

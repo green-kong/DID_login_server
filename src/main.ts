@@ -13,12 +13,12 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  app.useStaticAssets(join(__dirname, '..', 'assets'));
+  app.useStaticAssets(join(__dirname, '../assets'));
   app.setBaseViewsDir(views);
 
   nunjucks.configure(views, { express });
   app.setViewEngine('html');
 
-  await app.listen(3000);
+  await app.listen(8000);
 }
 bootstrap();
