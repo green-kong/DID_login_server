@@ -4,7 +4,8 @@ import { AuthorizorController } from './authorizor.controller';
 import { AuthorizorService } from './authorizor.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Login } from './entities/login.entity';
-import { APIKey } from './entities/APIKey.entity';
+// import { APIKey } from './entities/APIKey.entity';
+import { application } from './entities/application.entity';
 
 export const cacheModule = CacheModule.registerAsync({
   useFactory: async () => ({
@@ -16,7 +17,11 @@ export const cacheModule = CacheModule.registerAsync({
 });
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Login, APIKey]), cacheModule],
+  imports: [
+    TypeOrmModule.forFeature([Login], 'test'),
+    TypeOrmModule.forFeature([application], 'DID'),
+    cacheModule,
+  ],
   providers: [AuthorizorService],
   controllers: [AuthorizorController],
 })

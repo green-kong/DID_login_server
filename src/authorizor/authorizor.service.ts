@@ -16,6 +16,7 @@ import { TokenDto } from './dto/token.dto';
 import { LoginResultDto } from './dto/loginResult.dto';
 import { UserInfoDto } from './dto/user.dto';
 import { TokensDto } from './dto/tokens.dto';
+import { application } from './entities/application.entity';
 
 dotenv.config();
 
@@ -27,11 +28,11 @@ export class AuthorizorService {
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
 
-    @InjectRepository(Login)
+    @InjectRepository(Login, 'test')
     private loginRepository: Repository<Login>,
 
-    @InjectRepository(APIKey)
-    private APIKeyRepository: Repository<APIKey>,
+    @InjectRepository(application, 'DID')
+    private applicationRepoitory: Repository<application>,
   ) {
     (async () => {
       this.deployed = await getDeployed();
@@ -44,7 +45,7 @@ export class AuthorizorService {
     host: string,
     tokens: TokensDto,
   ): Promise<boolean | CodeDto | TokensDto> {
-    const registered = await this.APIKeyRepository.findOne({
+    const registered = await this.applicationRepoitory.findOne({
       where: { APIKey: clientId, host },
     });
     if (registered && clientId) {
@@ -55,7 +56,7 @@ export class AuthorizorService {
         return true;
       }
     } else {
-      false;
+      return false;
     }
   }
 

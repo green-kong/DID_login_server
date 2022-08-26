@@ -3,18 +3,33 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APIKey } from './authorizor/entities/APIKey.entity';
 import { Login } from './authorizor/entities/login.entity';
 import { AuthorizorModule } from './authorizor/authorizor.module';
+import { application } from './authorizor/entities/application.entity';
+import { connected } from './authorizor/entities/connected.entity';
+import { user } from './authorizor/entities/user.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
+      name: 'test',
       type: 'mysql',
       host: 'localhost',
       port: 3306,
       username: 'dev_kong',
       password: 'qwer1234',
       database: 'test',
-      entities: [APIKey, Login],
-      synchronize: true,
+      entities: [Login],
+      synchronize: false,
+    }),
+    TypeOrmModule.forRoot({
+      name: 'DID',
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'dev_kong',
+      password: 'qwer1234',
+      database: 'DID',
+      entities: [application, connected, user],
+      synchronize: false,
     }),
     AuthorizorModule,
   ],
