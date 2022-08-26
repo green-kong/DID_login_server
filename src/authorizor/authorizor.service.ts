@@ -6,7 +6,6 @@ import * as crypto from 'crypto';
 import { v4 } from 'uuid';
 import dotenv from 'dotenv';
 
-import { APIKey } from './entities/APIKey.entity';
 import { Login } from './entities/login.entity';
 import { LoginDto } from './dto/login.dto';
 import { CodeDto } from './dto/code.dto';
@@ -44,10 +43,12 @@ export class AuthorizorService {
     clientId: string,
     host: string,
     tokens: TokensDto,
+    redirect_uri: string,
   ): Promise<boolean | CodeDto | TokensDto> {
     const registered = await this.applicationRepoitory.findOne({
-      where: { APIKey: clientId, host },
+      where: { APIKey: clientId, host, redirectURI: redirect_uri },
     });
+
     if (registered && clientId) {
       const result = await this.checkTokens(tokens);
       if (result) {
@@ -64,14 +65,13 @@ export class AuthorizorService {
     userId,
     userPw,
   }: LoginDto): Promise<false | LoginResultDto> {
-    const secret = 'helpless';
+    const secret = process.env.SALT;
     const hash = crypto
       .createHmac('sha256', secret)
       .update(userId + userPw)
       .digest('hex');
 
     const getUserInfoResult = await this.getUserInfoByHash(hash);
-
     if (getUserInfoResult) {
       const code = await this.createCodeAndSave(hash);
 

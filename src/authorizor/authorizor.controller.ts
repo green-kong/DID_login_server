@@ -33,6 +33,7 @@ export class AuthorizorController {
       clientID,
       host,
       tokens,
+      redirect_uri,
     );
 
     if (checkAPIKeyResult === true) {
