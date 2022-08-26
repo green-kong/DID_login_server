@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APIKey } from './authorizor/entities/APIKey.entity';
 import { Login } from './authorizor/entities/login.entity';
 import { AuthorizorModule } from './authorizor/authorizor.module';
 import { application } from './authorizor/entities/application.entity';

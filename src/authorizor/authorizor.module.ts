@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Login } from './entities/login.entity';
 // import { APIKey } from './entities/APIKey.entity';
 import { application } from './entities/application.entity';
+import { connected } from './entities/connected.entity';
+import { user } from './entities/user.entity';
 
 export const cacheModule = CacheModule.registerAsync({
   useFactory: async () => ({
@@ -19,7 +21,7 @@ export const cacheModule = CacheModule.registerAsync({
 @Module({
   imports: [
     TypeOrmModule.forFeature([Login], 'test'),
-    TypeOrmModule.forFeature([application], 'DID'),
+    TypeOrmModule.forFeature([application, connected, user], 'DID'),
     cacheModule,
   ],
   providers: [AuthorizorService],

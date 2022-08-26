@@ -36,7 +36,8 @@ export class AuthorizorController {
       redirect_uri,
     );
 
-    if (checkAPIKeyResult === true) {
+    if (typeof checkAPIKeyResult === 'number') {
+      res.cookie('a_idx', checkAPIKeyResult);
       res.render('index');
       return;
     } else if (checkAPIKeyResult === false) {
@@ -58,9 +59,11 @@ export class AuthorizorController {
   async login(
     @Body() loginDto: LoginDto,
     @Query('redirectURI') redirectURI: string,
+    @Req() req: Request,
     @Res() res: Response,
   ) {
-    const loginResult = await this.authorizorService.checkUser(loginDto);
+    const { a_idx } = req.cookies;
+    const loginResult = await this.authorizorService.checkUser(loginDto, a_idx);
     if (loginResult) {
       res.cookie('DID_ACCESS_TOKEN', loginResult.accessToken, {
         httpOnly: true,
@@ -70,6 +73,7 @@ export class AuthorizorController {
         httpOnly: true,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
       });
+      res.cookie('a_idx', '', { maxAge: 0 });
       res.redirect(redirectURI + `?code=${loginResult.code}`);
     } else {
       res.render('index', { error: '아이디와 비밀번호를 다시 확인해 주세요.' });

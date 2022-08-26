@@ -16,6 +16,8 @@ import { LoginResultDto } from './dto/loginResult.dto';
 import { UserInfoDto } from './dto/user.dto';
 import { TokensDto } from './dto/tokens.dto';
 import { application } from './entities/application.entity';
+import { connected } from './entities/connected.entity';
+import { user } from './entities/user.entity';
 
 dotenv.config();
 
@@ -32,6 +34,12 @@ export class AuthorizorService {
 
     @InjectRepository(application, 'DID')
     private applicationRepoitory: Repository<application>,
+
+    @InjectRepository(connected, 'DID')
+    private connectedRepository: Repository<connected>,
+
+    @InjectRepository(user, 'DID')
+    private userRepository: Repository<user>,
   ) {
     (async () => {
       this.deployed = await getDeployed();
@@ -44,7 +52,7 @@ export class AuthorizorService {
     host: string,
     tokens: TokensDto,
     redirect_uri: string,
-  ): Promise<boolean | CodeDto | TokensDto> {
+  ): Promise<false | CodeDto | TokensDto | number> {
     const registered = await this.applicationRepoitory.findOne({
       where: { APIKey: clientId, host, redirectURI: redirect_uri },
     });
@@ -54,17 +62,17 @@ export class AuthorizorService {
       if (result) {
         return result;
       } else {
-        return true;
+        return registered.idx;
       }
     } else {
       return false;
     }
   }
 
-  async checkUser({
-    userId,
-    userPw,
-  }: LoginDto): Promise<false | LoginResultDto> {
+  async checkUser(
+    { userId, userPw }: LoginDto,
+    a_idx: string,
+  ): Promise<false | LoginResultDto> {
     const secret = process.env.SALT;
     const hash = crypto
       .createHmac('sha256', secret)
@@ -72,6 +80,7 @@ export class AuthorizorService {
       .digest('hex');
 
     const getUserInfoResult = await this.getUserInfoByHash(hash);
+
     if (getUserInfoResult) {
       const code = await this.createCodeAndSave(hash);
 
@@ -86,6 +95,16 @@ export class AuthorizorService {
 
       await this.loginRepository.save({ hash, refreshToken });
 
+      const userInfo = await this.userRepository.findOne({
+        where: { userId },
+        select: ['idx'],
+      });
+
+      await this.connectedRepository.save({
+        a_idx: Number(a_idx),
+        u_idx: userInfo.idx,
+      });
+
       return { code, accessToken, refreshToken };
     } else {
       return false;
@@ -99,13 +118,13 @@ export class AuthorizorService {
   }
 
   async getUserInfoByHash(hash: string): Promise<UserInfoDto | false> {
-    const user = await this.deployed.methods
-      .getUserInfo(hash)
-      .call({ from: process.env.CONTRACT_DEPLOYER });
-
-    if (user) {
+    try {
+      const user = await this.deployed.methods
+        .getUserInfo(hash)
+        .call({ from: process.env.CONTRACT_DEPLOYER });
       return user;
-    } else {
+    } catch (error) {
+      console.log(error);
       return false;
     }
   }
@@ -179,7 +198,7 @@ export class AuthorizorService {
     }
   }
 
-  async checkTokens(tokens: TokensDto): Promise<TokensDto | boolean | CodeDto> {
+  async checkTokens(tokens: TokensDto): Promise<TokensDto | false | CodeDto> {
     const { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN } = tokens;
 
     if (DID_ACCESS_TOKEN) {
