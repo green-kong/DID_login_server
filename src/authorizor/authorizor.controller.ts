@@ -48,8 +48,12 @@ export class AuthorizorController {
       res.redirect(redirect_uri + `?code=${checkAPIKeyResult.code}`);
       return;
     } else if (checkAPIKeyResult instanceof TokensDto) {
-      res.cookie('DID_ACCESS_TOKEN', checkAPIKeyResult.DID_ACCESS_TOKEN);
-      res.cookie('DID_REFRESH_TOKEN', checkAPIKeyResult.DID_REFRESH_TOKEN);
+      res.cookie('DID_ACCESS_TOKEN', checkAPIKeyResult.DID_ACCESS_TOKEN, {
+        maxAge: 1000 * 60 * 60 * 2 - 10000,
+      });
+      res.cookie('DID_REFRESH_TOKEN', checkAPIKeyResult.DID_REFRESH_TOKEN, {
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 2 - 10000,
+      });
       console.log('refresh로 로그인!');
       res.redirect(redirect_uri + `?code=${checkAPIKeyResult.code}`);
     }

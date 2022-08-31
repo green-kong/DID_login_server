@@ -3,4 +3,5 @@ export class UserInfoDto {
   birth: string;
   gender: string;
   email: string;
+  userCode: string;
 }

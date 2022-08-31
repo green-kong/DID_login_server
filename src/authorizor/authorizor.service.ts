@@ -191,6 +191,7 @@ export class AuthorizorService {
         birth: getUserInfoResult.birth,
         gender: getUserInfoResult.gender,
         email: getUserInfoResult.email,
+        userCode: getUserInfoResult.userCode,
       };
       return userInfo;
     } else {
