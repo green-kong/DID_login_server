@@ -100,10 +100,20 @@ export class AuthorizorService {
         select: ['idx'],
       });
 
-      await this.connectedRepository.save({
-        a_idx: Number(a_idx),
-        u_idx: userInfo.idx,
+      const connectionCheck = await this.connectedRepository.findOne({
+        where: {
+          a_idx: Number(a_idx),
+          u_idx: userInfo.idx,
+        },
       });
+
+      if (!connectionCheck) {
+        console.log('check');
+        await this.connectedRepository.save({
+          a_idx: Number(a_idx),
+          u_idx: userInfo.idx,
+        });
+      }
 
       return { code, accessToken, refreshToken };
     } else {
