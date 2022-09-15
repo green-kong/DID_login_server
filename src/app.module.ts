@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Login } from './authorizor/entities/login.entity';
@@ -5,6 +6,9 @@ import { AuthorizorModule } from './authorizor/authorizor.module';
 import { application } from './authorizor/entities/application.entity';
 import { connected } from './authorizor/entities/connected.entity';
 import { user } from './authorizor/entities/user.entity';
+import DBconfig from '../db.config';
+
+dotenv.config();
 
 @Module({
   imports: [
@@ -13,20 +17,20 @@ import { user } from './authorizor/entities/user.entity';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'dev_kong',
-      password: 'qwer1234',
-      database: 'test',
+      username: DBconfig.login.user,
+      password: DBconfig.login.password,
+      database: DBconfig.login.database,
       entities: [Login],
       synchronize: false,
     }),
     TypeOrmModule.forRoot({
       name: 'DID',
       type: 'mysql',
-      host: 'localhost',
+      host: DBconfig.main.host,
       port: 3306,
-      username: 'dev_kong',
-      password: 'qwer1234',
-      database: 'DID',
+      username: DBconfig.main.user,
+      password: DBconfig.main.password,
+      database: DBconfig.main.database,
       entities: [application, connected, user],
       synchronize: false,
     }),

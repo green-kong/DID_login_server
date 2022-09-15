@@ -37,3 +37,5 @@ lerna-debug.log*
 .env
 
 src/contract/DID.json
+
+kong_key.pem
