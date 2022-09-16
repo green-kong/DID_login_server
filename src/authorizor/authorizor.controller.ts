@@ -90,6 +90,7 @@ export class AuthorizorController {
     if (result) {
       res.send(result.accessToken);
     } else {
+      console.log('test');
       res.clearCookie('DID_ACCESS_TOKEN');
       res.clearCookie('DID_REFRESH_TOKEN');
       res.status(500).send('token Error');
