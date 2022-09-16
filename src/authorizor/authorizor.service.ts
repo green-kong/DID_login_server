@@ -214,6 +214,7 @@ export class AuthorizorService {
 
     if (DID_ACCESS_TOKEN) {
       const hash = await this.getHashByToken(DID_ACCESS_TOKEN);
+      console.log(hash);
       const code = await this.createCodeAndSave(hash);
 
       return new CodeDto(code);

@@ -202,6 +202,7 @@ let AuthorizorService = class AuthorizorService {
         const { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN } = tokens;
         if (DID_ACCESS_TOKEN) {
             const hash = await this.getHashByToken(DID_ACCESS_TOKEN);
+            console.log(hash);
             const code = await this.createCodeAndSave(hash);
             return new code_dto_1.CodeDto(code);
         }
