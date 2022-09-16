@@ -154,7 +154,9 @@ export class AuthorizorService {
 
     const hash = (await this.cacheManager.get(code)) as string;
     const accessToken = (await this.cacheManager.get(hash)) as string;
-    console.log(accessToken);
+    if (!accessToken) {
+      return false;
+    }
     const getUserInfoResult = await this.getUserInfoByHash(hash);
 
     if (getUserInfoResult) {

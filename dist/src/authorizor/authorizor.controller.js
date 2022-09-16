@@ -77,6 +77,8 @@ let AuthorizorController = class AuthorizorController {
             res.send(result.accessToken);
         }
         else {
+            res.clearCookie('DID_ACCESS_TOKEN');
+            res.clearCookie('DID_REFRESH_TOKEN');
             res.status(500).send('token Error');
         }
     }

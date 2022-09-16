@@ -149,7 +149,9 @@ let AuthorizorService = class AuthorizorService {
         const { code } = codeDto;
         const hash = (await this.cacheManager.get(code));
         const accessToken = (await this.cacheManager.get(hash));
-        console.log(accessToken);
+        if (!accessToken) {
+            return false;
+        }
         const getUserInfoResult = await this.getUserInfoByHash(hash);
         if (getUserInfoResult) {
             try {
