@@ -9,7 +9,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const express = app.getHttpAdapter().getInstance();
 
-  const views = join(__dirname, '..', 'views');
+  const views = process.env.NODE_ENV
+    ? join(__dirname, '..', '..', 'views')
+    : join(__dirname, '..', 'views');
 
   app.use(cookieParser());
 

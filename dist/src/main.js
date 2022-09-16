@@ -34,7 +34,9 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const express = app.getHttpAdapter().getInstance();
-    const views = (0, path_1.join)(__dirname, '..', 'views');
+    const views = process.env.NODE_ENV
+        ? (0, path_1.join)(__dirname, '..', '..', 'views')
+        : (0, path_1.join)(__dirname, '..', 'views');
     app.use((0, cookie_parser_1.default)());
     app.useStaticAssets((0, path_1.join)(__dirname, '../assets'));
     app.setBaseViewsDir(views);
