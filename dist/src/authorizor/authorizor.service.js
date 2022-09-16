@@ -146,21 +146,18 @@ let AuthorizorService = class AuthorizorService {
         return { DID_ACCESS_TOKEN: accessToken, DID_REFRESH_TOKEN: refreshToken };
     }
     async getTokenByCode(codeDto) {
-        const { code } = codeDto;
-        const hash = (await this.cacheManager.get(code));
-        const accessToken = (await this.cacheManager.get(hash));
-        if (!accessToken) {
-            return false;
-        }
-        const getUserInfoResult = await this.getUserInfoByHash(hash);
-        if (getUserInfoResult) {
-            try {
+        try {
+            const { code } = codeDto;
+            const hash = (await this.cacheManager.get(code));
+            const accessToken = (await this.cacheManager.get(hash));
+            const getUserInfoResult = await this.getUserInfoByHash(hash);
+            if (getUserInfoResult) {
                 return { accessToken };
             }
-            catch (error) {
-                console.log(error);
-                return false;
-            }
+        }
+        catch (error) {
+            console.log(error);
+            return false;
         }
     }
     async getTokenByHash(hash) {
@@ -205,7 +202,6 @@ let AuthorizorService = class AuthorizorService {
         const { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN } = tokens;
         if (DID_ACCESS_TOKEN) {
             const hash = await this.getHashByToken(DID_ACCESS_TOKEN);
-            console.log(hash);
             const code = await this.createCodeAndSave(hash);
             return new code_dto_1.CodeDto(code);
         }

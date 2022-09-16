@@ -150,22 +150,19 @@ export class AuthorizorService {
   }
 
   async getTokenByCode(codeDto: CodeDto): Promise<TokenDto | false> {
-    const { code } = codeDto;
+    try {
+      const { code } = codeDto;
 
-    const hash = (await this.cacheManager.get(code)) as string;
-    const accessToken = (await this.cacheManager.get(hash)) as string;
-    if (!accessToken) {
-      return false;
-    }
-    const getUserInfoResult = await this.getUserInfoByHash(hash);
+      const hash = (await this.cacheManager.get(code)) as string;
+      const accessToken = (await this.cacheManager.get(hash)) as string;
+      const getUserInfoResult = await this.getUserInfoByHash(hash);
 
-    if (getUserInfoResult) {
-      try {
+      if (getUserInfoResult) {
         return { accessToken };
-      } catch (error) {
-        console.log(error);
-        return false;
       }
+    } catch (error) {
+      console.log(error);
+      return false;
     }
   }
 
@@ -217,7 +214,6 @@ export class AuthorizorService {
 
     if (DID_ACCESS_TOKEN) {
       const hash = await this.getHashByToken(DID_ACCESS_TOKEN);
-      console.log(hash);
       const code = await this.createCodeAndSave(hash);
 
       return new CodeDto(code);
