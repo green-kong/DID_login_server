@@ -37,8 +37,11 @@ async function bootstrap() {
     const views = process.env.NODE_ENV
         ? (0, path_1.join)(__dirname, '..', '..', 'views')
         : (0, path_1.join)(__dirname, '..', 'views');
+    const staticPath = process.env.NODE_ENV
+        ? (0, path_1.join)(__dirname, '..', '..', 'assets')
+        : (0, path_1.join)(__dirname, '..', 'assets');
     app.use((0, cookie_parser_1.default)());
-    app.useStaticAssets((0, path_1.join)(__dirname, '../assets'));
+    app.useStaticAssets(staticPath);
     app.setBaseViewsDir(views);
     nunjucks.configure(views, { express });
     app.setViewEngine('html');

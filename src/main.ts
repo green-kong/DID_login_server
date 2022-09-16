@@ -13,9 +13,13 @@ async function bootstrap() {
     ? join(__dirname, '..', '..', 'views')
     : join(__dirname, '..', 'views');
 
+  const staticPath = process.env.NODE_ENV
+    ? join(__dirname, '..', '..', 'assets')
+    : join(__dirname, '..', 'assets');
+
   app.use(cookieParser());
 
-  app.useStaticAssets(join(__dirname, '../assets'));
+  app.useStaticAssets(staticPath);
   app.setBaseViewsDir(views);
 
   nunjucks.configure(views, { express });
