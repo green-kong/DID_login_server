@@ -191,7 +191,10 @@ export class AuthorizorService {
     return hash;
   }
 
-  async getUserInofByToken(accessToken: string): Promise<UserInfoDto | false> {
+  async getUserInofByToken(
+    accessToken: string,
+    clientID: string,
+  ): Promise<UserInfoDto | false> {
     const hash = await this.getHashByToken(accessToken);
     const getUserInfoResult = await this.getUserInfoByHash(hash);
 
@@ -203,7 +206,7 @@ export class AuthorizorService {
         email: getUserInfoResult.email,
         userCode: getUserInfoResult.userCode,
       };
-
+      console.log(clientID);
       return userInfo;
     } else {
       return false;
