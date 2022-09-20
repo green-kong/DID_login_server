@@ -191,7 +191,10 @@ export class AuthorizorService {
     return hash;
   }
 
-  async getUserInofByToken(accessToken: string): Promise<UserInfoDto | false> {
+  async getUserInofByToken(
+    accessToken: string,
+    clientId: string,
+  ): Promise<UserInfoDto | false> {
     const hash = await this.getHashByToken(accessToken);
     const getUserInfoResult = await this.getUserInfoByHash(hash);
 
