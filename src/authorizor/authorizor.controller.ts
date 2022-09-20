@@ -99,14 +99,12 @@ export class AuthorizorController {
   async getUserInfo(
     @Headers('authorization') bearerToken: string,
     @Res() res: Response,
-    @Req() req: Request,
+    @Query('clientID') clientID: string,
   ) {
-    const { a_idx } = req.cookies;
-    console.log(req.cookies);
-    console.log(a_idx);
     const accessToken = bearerToken.split(' ')[1];
     const userInfo = await this.authorizorService.getUserInofByToken(
       accessToken,
+      clientID,
     );
     if (userInfo) {
       res.send(userInfo);
