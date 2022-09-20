@@ -104,6 +104,8 @@ export class AuthorizorController {
     @Req() req: Request,
   ) {
     const { a_idx } = req.cookies;
+    console.log(req.cookies);
+    console.log(a_idx);
     const accessToken = bearerToken.split(' ')[1];
     const userInfo = await this.authorizorService.getUserInofByToken(
       accessToken,
