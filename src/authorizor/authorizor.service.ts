@@ -58,7 +58,7 @@ export class AuthorizorService {
     });
 
     if (registered && clientId) {
-      const result = await this.checkTokens(tokens);
+      const result = await this.checkTokens(tokens, registered.idx);
       if (result) {
         return result;
       } else {
@@ -191,7 +191,10 @@ export class AuthorizorService {
     return hash;
   }
 
-  async getUserInofByToken(accessToken: string): Promise<UserInfoDto | false> {
+  async getUserInofByToken(
+    accessToken: string,
+    a_idx: string,
+  ): Promise<UserInfoDto | false> {
     const hash = await this.getHashByToken(accessToken);
     const getUserInfoResult = await this.getUserInfoByHash(hash);
 
@@ -203,20 +206,44 @@ export class AuthorizorService {
         email: getUserInfoResult.email,
         userCode: getUserInfoResult.userCode,
       };
+
+      const userIdxFromDB = await this.userRepository.findOne({
+        where: { userCode: getUserInfoResult.userCode },
+        select: ['idx'],
+      });
+
+      const connectionCheck = await this.connectedRepository.findOne({
+        where: {
+          a_idx: Number(a_idx),
+          u_idx: userIdxFromDB.idx,
+        },
+      });
+
+      if (!connectionCheck) {
+        console.log('check');
+        await this.connectedRepository.save({
+          a_idx: Number(a_idx),
+          u_idx: userIdxFromDB.idx,
+        });
+      }
+
       return userInfo;
     } else {
       return false;
     }
   }
 
-  async checkTokens(tokens: TokensDto): Promise<TokensDto | false | CodeDto> {
+  async checkTokens(
+    tokens: TokensDto,
+    a_idx: number,
+  ): Promise<TokensDto | false | CodeDto> {
     const { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN } = tokens;
 
     if (DID_ACCESS_TOKEN) {
       const hash = await this.getHashByToken(DID_ACCESS_TOKEN);
       const code = await this.createCodeAndSave(hash);
 
-      return new CodeDto(code);
+      return new CodeDto(code, a_idx);
     } else if (DID_REFRESH_TOKEN) {
       const result = await this.loginRepository.findOne({
         where: { refreshToken: DID_REFRESH_TOKEN },
@@ -240,6 +267,7 @@ export class AuthorizorService {
           code,
           tokens.DID_ACCESS_TOKEN,
           tokens.DID_REFRESH_TOKEN,
+          a_idx,
         );
       }
     } else {
