@@ -7,4 +7,7 @@ export class user {
 
   @Column()
   userId: string;
+
+  @Column()
+  userCode: string;
 }

@@ -38,10 +38,12 @@ let AuthorizorController = class AuthorizorController {
         }
         else if (checkAPIKeyResult instanceof code_dto_1.CodeDto) {
             console.log('Access_Token 으로 로그인');
+            res.cookie('a_idx', checkAPIKeyResult.a_idx);
             res.redirect(redirect_uri + `?code=${checkAPIKeyResult.code}`);
             return;
         }
         else if (checkAPIKeyResult instanceof tokens_dto_1.TokensDto) {
+            res.cookie('a_idx', checkAPIKeyResult.a_idx);
             res.cookie('DID_ACCESS_TOKEN', checkAPIKeyResult.DID_ACCESS_TOKEN, {
                 maxAge: 1000 * 60 * 60 * 2 - 10000,
             });
@@ -80,9 +82,10 @@ let AuthorizorController = class AuthorizorController {
             res.status(500).send('token Error');
         }
     }
-    async getUserInfo(bearerToken, res) {
+    async getUserInfo(bearerToken, res, req) {
+        const { a_idx } = req.cookies;
         const accessToken = bearerToken.split(' ')[1];
-        const userInfo = await this.authorizorService.getUserInofByToken(accessToken);
+        const userInfo = await this.authorizorService.getUserInofByToken(accessToken, a_idx);
         if (userInfo) {
             res.send(userInfo);
         }
@@ -123,8 +126,9 @@ __decorate([
     (0, common_1.Get)('user'),
     __param(0, (0, common_1.Headers)('authorization')),
     __param(1, (0, common_1.Res)()),
+    __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthorizorController.prototype, "getUserInfo", null);
 AuthorizorController = __decorate([
