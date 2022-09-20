@@ -76,14 +76,14 @@ let AuthorizorService = class AuthorizorService {
                 return result;
             }
             else {
-                return registered.idx;
+                return true;
             }
         }
         else {
             return false;
         }
     }
-    async checkUser({ userId, userPw }, a_idx) {
+    async checkUser({ userId, userPw, }) {
         const secret = process.env.SALT;
         const hash = crypto
             .createHmac('sha256', secret)
@@ -98,23 +98,6 @@ let AuthorizorService = class AuthorizorService {
                 ttl: 60 * 60 * 2,
             });
             await this.loginRepository.save({ hash, refreshToken });
-            const userInfo = await this.userRepository.findOne({
-                where: { userId },
-                select: ['idx'],
-            });
-            const connectionCheck = await this.connectedRepository.findOne({
-                where: {
-                    a_idx: Number(a_idx),
-                    u_idx: userInfo.idx,
-                },
-            });
-            if (!connectionCheck) {
-                console.log('check');
-                await this.connectedRepository.save({
-                    a_idx: Number(a_idx),
-                    u_idx: userInfo.idx,
-                });
-            }
             return { code, accessToken, refreshToken };
         }
         else {

@@ -27,8 +27,7 @@ let AuthorizorController = class AuthorizorController {
         const { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN } = req.cookies;
         const tokens = { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN };
         const checkAPIKeyResult = await this.authorizorService.checkAPIKey(clientID, host, tokens, redirect_uri);
-        if (typeof checkAPIKeyResult === 'number') {
-            res.cookie('a_idx', checkAPIKeyResult);
+        if (checkAPIKeyResult === true) {
             res.render('index');
             return;
         }
@@ -52,9 +51,8 @@ let AuthorizorController = class AuthorizorController {
             res.redirect(redirect_uri + `?code=${checkAPIKeyResult.code}`);
         }
     }
-    async login(loginDto, redirectURI, req, res) {
-        const { a_idx } = req.cookies;
-        const loginResult = await this.authorizorService.checkUser(loginDto, a_idx);
+    async login(loginDto, redirectURI, res) {
+        const loginResult = await this.authorizorService.checkUser(loginDto);
         if (loginResult) {
             res.cookie('DID_ACCESS_TOKEN', loginResult.accessToken, {
                 httpOnly: true,
@@ -64,7 +62,6 @@ let AuthorizorController = class AuthorizorController {
                 httpOnly: true,
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
             });
-            res.cookie('a_idx', '', { maxAge: 0 });
             res.redirect(redirectURI + `?code=${loginResult.code}`);
         }
         else {
@@ -105,10 +102,9 @@ __decorate([
     (0, common_1.Post)('auth'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Query)('redirectURI')),
-    __param(2, (0, common_1.Req)()),
-    __param(3, (0, common_1.Res)()),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.LoginDto, String, Object, Object]),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto, String, Object]),
     __metadata("design:returntype", Promise)
 ], AuthorizorController.prototype, "login", null);
 __decorate([

@@ -52,7 +52,7 @@ export class AuthorizorService {
     host: string,
     tokens: TokensDto,
     redirect_uri: string,
-  ): Promise<false | CodeDto | TokensDto | number> {
+  ): Promise<boolean | CodeDto | TokensDto> {
     const registered = await this.applicationRepoitory.findOne({
       where: { APIKey: clientId, host, redirectURI: redirect_uri },
     });
@@ -62,17 +62,17 @@ export class AuthorizorService {
       if (result) {
         return result;
       } else {
-        return registered.idx;
+        return true;
       }
     } else {
       return false;
     }
   }
 
-  async checkUser(
-    { userId, userPw }: LoginDto,
-    a_idx: string,
-  ): Promise<false | LoginResultDto> {
+  async checkUser({
+    userId,
+    userPw,
+  }: LoginDto): Promise<false | LoginResultDto> {
     const secret = process.env.SALT;
     const hash = crypto
       .createHmac('sha256', secret)
@@ -94,26 +94,6 @@ export class AuthorizorService {
       });
 
       await this.loginRepository.save({ hash, refreshToken });
-
-      const userInfo = await this.userRepository.findOne({
-        where: { userId },
-        select: ['idx'],
-      });
-
-      const connectionCheck = await this.connectedRepository.findOne({
-        where: {
-          a_idx: Number(a_idx),
-          u_idx: userInfo.idx,
-        },
-      });
-
-      if (!connectionCheck) {
-        console.log('check');
-        await this.connectedRepository.save({
-          a_idx: Number(a_idx),
-          u_idx: userInfo.idx,
-        });
-      }
 
       return { code, accessToken, refreshToken };
     } else {

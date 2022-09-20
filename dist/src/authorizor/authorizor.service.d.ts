@@ -20,8 +20,8 @@ export declare class AuthorizorService {
     deployed: any;
     jwt: Jwt;
     constructor(cacheManager: Cache, loginRepository: Repository<Login>, applicationRepoitory: Repository<application>, connectedRepository: Repository<connected>, userRepository: Repository<user>);
-    checkAPIKey(clientId: string, host: string, tokens: TokensDto, redirect_uri: string): Promise<false | CodeDto | TokensDto | number>;
-    checkUser({ userId, userPw }: LoginDto, a_idx: string): Promise<false | LoginResultDto>;
+    checkAPIKey(clientId: string, host: string, tokens: TokensDto, redirect_uri: string): Promise<boolean | CodeDto | TokensDto>;
+    checkUser({ userId, userPw, }: LoginDto): Promise<false | LoginResultDto>;
     createCodeAndSave(hash: string): Promise<string>;
     getUserInfoByHash(hash: string): Promise<UserInfoDto | false>;
     createTokens(hash: string): Promise<TokensDto>;
