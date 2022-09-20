@@ -192,7 +192,29 @@ let AuthorizorService = class AuthorizorService {
                 email: getUserInfoResult.email,
                 userCode: getUserInfoResult.userCode,
             };
-            console.log(clientID);
+            const applicationInfo = await this.applicationRepoitory.findOne({
+                where: { APIKey: clientID },
+                select: ['idx'],
+            });
+            const userInfoFromDB = await this.userRepository.findOne({
+                where: { userCode: getUserInfoResult.userCode },
+                select: ['idx'],
+            });
+            if (!applicationInfo || !userInfoFromDB) {
+                return false;
+            }
+            const connectionCheck = await this.connectedRepository.findOne({
+                where: {
+                    a_idx: Number(applicationInfo.idx),
+                    u_idx: userInfoFromDB.idx,
+                },
+            });
+            if (!connectionCheck) {
+                await this.connectedRepository.save({
+                    a_idx: Number(applicationInfo.idx),
+                    u_idx: userInfoFromDB.idx,
+                });
+            }
             return userInfo;
         }
         else {
