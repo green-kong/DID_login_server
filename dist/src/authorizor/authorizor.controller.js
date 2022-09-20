@@ -80,12 +80,9 @@ let AuthorizorController = class AuthorizorController {
             res.status(500).send('token Error');
         }
     }
-    async getUserInfo(bearerToken, res, req) {
-        const { a_idx } = req.cookies;
-        console.log(req.cookies);
-        console.log(a_idx);
+    async getUserInfo(bearerToken, res, clientID) {
         const accessToken = bearerToken.split(' ')[1];
-        const userInfo = await this.authorizorService.getUserInofByToken(accessToken);
+        const userInfo = await this.authorizorService.getUserInofByToken(accessToken, clientID);
         if (userInfo) {
             res.send(userInfo);
         }
@@ -126,9 +123,9 @@ __decorate([
     (0, common_1.Get)('user'),
     __param(0, (0, common_1.Headers)('authorization')),
     __param(1, (0, common_1.Res)()),
-    __param(2, (0, common_1.Req)()),
+    __param(2, (0, common_1.Query)('clientID')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, Object, String]),
     __metadata("design:returntype", Promise)
 ], AuthorizorController.prototype, "getUserInfo", null);
 AuthorizorController = __decorate([

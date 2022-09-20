@@ -30,6 +30,6 @@ export declare class AuthorizorService {
         accessToken: string;
     }>;
     getHashByToken(accessToken: string): Promise<string>;
-    getUserInofByToken(accessToken: string): Promise<UserInfoDto | false>;
+    getUserInofByToken(accessToken: string, clientID: string): Promise<UserInfoDto | false>;
     checkTokens(tokens: TokensDto): Promise<TokensDto | false | CodeDto>;
 }
