@@ -84,6 +84,8 @@ let AuthorizorController = class AuthorizorController {
     }
     async getUserInfo(bearerToken, res, req) {
         const { a_idx } = req.cookies;
+        console.log(req.cookies);
+        console.log(a_idx);
         const accessToken = bearerToken.split(' ')[1];
         const userInfo = await this.authorizorService.getUserInofByToken(accessToken, a_idx);
         if (userInfo) {
