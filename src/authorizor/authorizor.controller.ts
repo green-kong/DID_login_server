@@ -101,6 +101,7 @@ export class AuthorizorController {
     @Res() res: Response,
     @Query('clientID') clientID: string,
   ) {
+    console.log(clientID);
     const accessToken = bearerToken.split(' ')[1];
     const userInfo = await this.authorizorService.getUserInofByToken(
       accessToken,
