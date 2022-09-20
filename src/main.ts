@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { join } from 'path';
+import cors from 'cors';
 import * as nunjucks from 'nunjucks';
 import cookieParser from 'cookie-parser';
 
@@ -16,7 +17,7 @@ async function bootstrap() {
   const staticPath = process.env.NODE_ENV
     ? join(__dirname, '..', '..', 'assets')
     : join(__dirname, '..', 'assets');
-
+  app.use(cors({ origin: true, credential: true }));
   app.use(cookieParser());
 
   app.useStaticAssets(staticPath);

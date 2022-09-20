@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const path_1 = require("path");
+const cors_1 = __importDefault(require("cors"));
 const nunjucks = __importStar(require("nunjucks"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 async function bootstrap() {
@@ -40,6 +41,7 @@ async function bootstrap() {
     const staticPath = process.env.NODE_ENV
         ? (0, path_1.join)(__dirname, '..', '..', 'assets')
         : (0, path_1.join)(__dirname, '..', 'assets');
+    app.use((0, cors_1.default)({ origin: true, credential: true }));
     app.use((0, cookie_parser_1.default)());
     app.useStaticAssets(staticPath);
     app.setBaseViewsDir(views);
