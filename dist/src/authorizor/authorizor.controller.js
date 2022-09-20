@@ -38,12 +38,10 @@ let AuthorizorController = class AuthorizorController {
         }
         else if (checkAPIKeyResult instanceof code_dto_1.CodeDto) {
             console.log('Access_Token 으로 로그인');
-            res.cookie('a_idx', checkAPIKeyResult.a_idx);
             res.redirect(redirect_uri + `?code=${checkAPIKeyResult.code}`);
             return;
         }
         else if (checkAPIKeyResult instanceof tokens_dto_1.TokensDto) {
-            res.cookie('a_idx', checkAPIKeyResult.a_idx);
             res.cookie('DID_ACCESS_TOKEN', checkAPIKeyResult.DID_ACCESS_TOKEN, {
                 maxAge: 1000 * 60 * 60 * 2 - 10000,
             });
@@ -87,7 +85,7 @@ let AuthorizorController = class AuthorizorController {
         console.log(req.cookies);
         console.log(a_idx);
         const accessToken = bearerToken.split(' ')[1];
-        const userInfo = await this.authorizorService.getUserInofByToken(accessToken, a_idx);
+        const userInfo = await this.authorizorService.getUserInofByToken(accessToken);
         if (userInfo) {
             res.send(userInfo);
         }

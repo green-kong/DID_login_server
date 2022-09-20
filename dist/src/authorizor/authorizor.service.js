@@ -71,7 +71,7 @@ let AuthorizorService = class AuthorizorService {
             where: { APIKey: clientId, host, redirectURI: redirect_uri },
         });
         if (registered && clientId) {
-            const result = await this.checkTokens(tokens, registered.idx);
+            const result = await this.checkTokens(tokens);
             if (result) {
                 return result;
             }
@@ -181,7 +181,7 @@ let AuthorizorService = class AuthorizorService {
         const { hash } = payload;
         return hash;
     }
-    async getUserInofByToken(accessToken, a_idx) {
+    async getUserInofByToken(accessToken) {
         const hash = await this.getHashByToken(accessToken);
         const getUserInfoResult = await this.getUserInfoByHash(hash);
         if (getUserInfoResult) {
@@ -192,35 +192,18 @@ let AuthorizorService = class AuthorizorService {
                 email: getUserInfoResult.email,
                 userCode: getUserInfoResult.userCode,
             };
-            const userIdxFromDB = await this.userRepository.findOne({
-                where: { userCode: getUserInfoResult.userCode },
-                select: ['idx'],
-            });
-            const connectionCheck = await this.connectedRepository.findOne({
-                where: {
-                    a_idx: Number(a_idx),
-                    u_idx: userIdxFromDB.idx,
-                },
-            });
-            if (!connectionCheck) {
-                console.log('check');
-                await this.connectedRepository.save({
-                    a_idx: Number(a_idx),
-                    u_idx: userIdxFromDB.idx,
-                });
-            }
             return userInfo;
         }
         else {
             return false;
         }
     }
-    async checkTokens(tokens, a_idx) {
+    async checkTokens(tokens) {
         const { DID_ACCESS_TOKEN, DID_REFRESH_TOKEN } = tokens;
         if (DID_ACCESS_TOKEN) {
             const hash = await this.getHashByToken(DID_ACCESS_TOKEN);
             const code = await this.createCodeAndSave(hash);
-            return new code_dto_1.CodeDto(code, a_idx);
+            return new code_dto_1.CodeDto(code);
         }
         else if (DID_REFRESH_TOKEN) {
             const result = await this.loginRepository.findOne({
@@ -235,7 +218,7 @@ let AuthorizorService = class AuthorizorService {
                 await this.loginRepository.update({ refreshToken: DID_REFRESH_TOKEN }, {
                     refreshToken: tokens.DID_REFRESH_TOKEN,
                 });
-                return new tokens_dto_1.TokensDto(code, tokens.DID_ACCESS_TOKEN, tokens.DID_REFRESH_TOKEN, a_idx);
+                return new tokens_dto_1.TokensDto(code, tokens.DID_ACCESS_TOKEN, tokens.DID_REFRESH_TOKEN);
             }
         }
         else {
