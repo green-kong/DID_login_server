@@ -181,7 +181,7 @@ let AuthorizorService = class AuthorizorService {
         const { hash } = payload;
         return hash;
     }
-    async getUserInofByToken(accessToken) {
+    async getUserInofByToken(accessToken, clientID) {
         const hash = await this.getHashByToken(accessToken);
         const getUserInfoResult = await this.getUserInfoByHash(hash);
         if (getUserInfoResult) {
@@ -192,6 +192,7 @@ let AuthorizorService = class AuthorizorService {
                 email: getUserInfoResult.email,
                 userCode: getUserInfoResult.userCode,
             };
+            console.log(clientID);
             return userInfo;
         }
         else {
