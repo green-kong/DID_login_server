@@ -96,7 +96,9 @@ let AuthorizorController = class AuthorizorController {
             res.cookie('DID_REFRESH_TOKEN', '', { maxAge: 0 });
             res.send(true);
         }
-        res.sendStatus(500).send(false);
+        else {
+            res.sendStatus(500).send(false);
+        }
     }
 };
 __decorate([

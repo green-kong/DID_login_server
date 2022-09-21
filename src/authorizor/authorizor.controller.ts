@@ -122,7 +122,8 @@ export class AuthorizorController {
       res.cookie('DID_ACCESS_TOKEN', '', { maxAge: 0 });
       res.cookie('DID_REFRESH_TOKEN', '', { maxAge: 0 });
       res.send(true);
+    } else {
+      res.sendStatus(500).send(false);
     }
-    res.sendStatus(500).send(false);
   }
 }
