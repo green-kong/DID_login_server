@@ -18,6 +18,7 @@ const authorizor_service_1 = require("./authorizor.service");
 const login_dto_1 = require("./dto/login.dto");
 const code_dto_1 = require("./dto/code.dto");
 const tokens_dto_1 = require("./dto/tokens.dto");
+const disconnect_dto_1 = require("./dto/disconnect.dto");
 let AuthorizorController = class AuthorizorController {
     constructor(authorizorService) {
         this.authorizorService = authorizorService;
@@ -87,6 +88,14 @@ let AuthorizorController = class AuthorizorController {
             res.status(500).send('token Error');
         }
     }
+    async disconnect(res, body) {
+        const { userCode, clientID } = body;
+        const disconnectResult = await this.authorizorService.disconnectUser(userCode, clientID);
+        if (disconnectResult) {
+            res.send(true);
+        }
+        res.sendStatus(500).send(false);
+    }
 };
 __decorate([
     (0, common_1.Get)('auth'),
@@ -124,6 +133,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, String]),
     __metadata("design:returntype", Promise)
 ], AuthorizorController.prototype, "getUserInfo", null);
+__decorate([
+    (0, common_1.Post)('disconnect'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, disconnect_dto_1.DisconnectDto]),
+    __metadata("design:returntype", Promise)
+], AuthorizorController.prototype, "disconnect", null);
 AuthorizorController = __decorate([
     (0, common_1.Controller)('authorizor'),
     __metadata("design:paramtypes", [authorizor_service_1.AuthorizorService])

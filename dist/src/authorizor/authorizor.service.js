@@ -231,6 +231,27 @@ let AuthorizorService = class AuthorizorService {
             return false;
         }
     }
+    async disconnectUser(userCode, clientID) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { userCode },
+                select: ['idx'],
+            });
+            const application = await this.applicationRepoitory.findOne({
+                where: { APIKey: clientID },
+                select: ['idx'],
+            });
+            await this.connectedRepository.delete({
+                a_idx: application.idx,
+                u_idx: user.idx,
+            });
+            return true;
+        }
+        catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
 };
 AuthorizorService = __decorate([
     (0, common_1.Injectable)(),

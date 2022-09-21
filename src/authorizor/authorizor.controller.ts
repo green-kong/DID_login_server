@@ -13,6 +13,7 @@ import { AuthorizorService } from './authorizor.service';
 import { LoginDto } from './dto/login.dto';
 import { CodeDto } from './dto/code.dto';
 import { TokensDto } from './dto/tokens.dto';
+import { DisconnectDto } from './dto/disconnect.dto';
 
 @Controller('authorizor')
 export class AuthorizorController {
@@ -107,5 +108,19 @@ export class AuthorizorController {
     } else {
       res.status(500).send('token Error');
     }
+  }
+
+  @Post('disconnect')
+  async disconnect(@Res() res: Response, @Body() body: DisconnectDto) {
+    const { userCode, clientID } = body;
+    const disconnectResult = await this.authorizorService.disconnectUser(
+      userCode,
+      clientID,
+    );
+
+    if (disconnectResult) {
+      res.send(true);
+    }
+    res.sendStatus(500).send(false);
   }
 }
