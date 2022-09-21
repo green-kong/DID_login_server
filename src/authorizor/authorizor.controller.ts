@@ -13,7 +13,6 @@ import { AuthorizorService } from './authorizor.service';
 import { LoginDto } from './dto/login.dto';
 import { CodeDto } from './dto/code.dto';
 import { TokensDto } from './dto/tokens.dto';
-import { DisconnectDto } from './dto/disconnect.dto';
 
 @Controller('authorizor')
 export class AuthorizorController {
@@ -110,9 +109,12 @@ export class AuthorizorController {
     }
   }
 
-  @Post('disconnect')
-  async disconnect(@Res() res: Response, @Body() body: DisconnectDto) {
-    const { userCode, clientID } = body;
+  @Get('disconnect')
+  async disconnect(
+    @Res() res: Response,
+    @Query('userCode') userCode: string,
+    @Query('clientID') clientID: string,
+  ) {
     const disconnectResult = await this.authorizorService.disconnectUser(
       userCode,
       clientID,
@@ -121,7 +123,7 @@ export class AuthorizorController {
     if (disconnectResult) {
       res.cookie('DID_ACCESS_TOKEN', '', { maxAge: 0 });
       res.cookie('DID_REFRESH_TOKEN', '', { maxAge: 0 });
-      res.send(true);
+      res.redirect(disconnectResult);
     } else {
       res.sendStatus(500).send(false);
     }

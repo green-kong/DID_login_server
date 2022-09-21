@@ -32,5 +32,5 @@ export declare class AuthorizorService {
     getHashByToken(accessToken: string): Promise<string>;
     getUserInofByToken(accessToken: string, clientID: string): Promise<UserInfoDto | false>;
     checkTokens(tokens: TokensDto): Promise<TokensDto | false | CodeDto>;
-    disconnectUser(userCode: string, clientID: string): Promise<boolean>;
+    disconnectUser(userCode: string, clientID: string): Promise<false | string>;
 }

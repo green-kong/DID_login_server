@@ -242,13 +242,16 @@ let AuthorizorService = class AuthorizorService {
             });
             const application = await this.applicationRepoitory.findOne({
                 where: { APIKey: clientID },
-                select: ['idx'],
+                select: ['idx', 'host'],
             });
+            if (!user || !application) {
+                return false;
+            }
             await this.connectedRepository.delete({
                 a_idx: application.idx,
                 u_idx: user.idx,
             });
-            return true;
+            return application.host;
         }
         catch (error) {
             console.log(error);

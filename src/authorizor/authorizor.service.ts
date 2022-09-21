@@ -261,7 +261,10 @@ export class AuthorizorService {
     }
   }
 
-  async disconnectUser(userCode: string, clientID: string): Promise<boolean> {
+  async disconnectUser(
+    userCode: string,
+    clientID: string,
+  ): Promise<false | string> {
     try {
       const user = await this.userRepository.findOne({
         where: { userCode },
@@ -270,15 +273,19 @@ export class AuthorizorService {
 
       const application = await this.applicationRepoitory.findOne({
         where: { APIKey: clientID },
-        select: ['idx'],
+        select: ['idx', 'host'],
       });
+
+      if (!user || !application) {
+        return false;
+      }
 
       await this.connectedRepository.delete({
         a_idx: application.idx,
         u_idx: user.idx,
       });
 
-      return true;
+      return application.host;
     } catch (error) {
       console.log(error);
       return false;
