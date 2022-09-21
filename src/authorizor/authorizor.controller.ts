@@ -123,7 +123,6 @@ export class AuthorizorController {
     if (disconnectResult) {
       res.cookie('DID_ACCESS_TOKEN', '', { maxAge: 0 });
       res.cookie('DID_REFRESH_TOKEN', '', { maxAge: 0 });
-      console.log(disconnectResult);
       res.redirect(disconnectResult);
     } else {
       res.sendStatus(500).send(false);
