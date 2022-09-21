@@ -18,7 +18,6 @@ const authorizor_service_1 = require("./authorizor.service");
 const login_dto_1 = require("./dto/login.dto");
 const code_dto_1 = require("./dto/code.dto");
 const tokens_dto_1 = require("./dto/tokens.dto");
-const disconnect_dto_1 = require("./dto/disconnect.dto");
 let AuthorizorController = class AuthorizorController {
     constructor(authorizorService) {
         this.authorizorService = authorizorService;
@@ -88,13 +87,12 @@ let AuthorizorController = class AuthorizorController {
             res.status(500).send('token Error');
         }
     }
-    async disconnect(res, body) {
-        const { userCode, clientID } = body;
+    async disconnect(res, userCode, clientID) {
         const disconnectResult = await this.authorizorService.disconnectUser(userCode, clientID);
         if (disconnectResult) {
             res.cookie('DID_ACCESS_TOKEN', '', { maxAge: 0 });
             res.cookie('DID_REFRESH_TOKEN', '', { maxAge: 0 });
-            res.send(true);
+            res.redirect(disconnectResult);
         }
         else {
             res.sendStatus(500).send(false);
@@ -138,11 +136,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthorizorController.prototype, "getUserInfo", null);
 __decorate([
-    (0, common_1.Post)('disconnect'),
+    (0, common_1.Get)('disconnect'),
     __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Query)('userCode')),
+    __param(2, (0, common_1.Query)('clientID')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, disconnect_dto_1.DisconnectDto]),
+    __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", Promise)
 ], AuthorizorController.prototype, "disconnect", null);
 AuthorizorController = __decorate([

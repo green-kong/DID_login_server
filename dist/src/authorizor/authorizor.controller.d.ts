@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { AuthorizorService } from './authorizor.service';
 import { LoginDto } from './dto/login.dto';
 import { CodeDto } from './dto/code.dto';
-import { DisconnectDto } from './dto/disconnect.dto';
 export declare class AuthorizorController {
     private readonly authorizorService;
     constructor(authorizorService: AuthorizorService);
@@ -10,5 +9,5 @@ export declare class AuthorizorController {
     login(loginDto: LoginDto, redirectURI: string, res: Response): Promise<void>;
     createToken(codeDto: CodeDto, res: Response): Promise<void>;
     getUserInfo(bearerToken: string, res: Response, clientID: string): Promise<void>;
-    disconnect(res: Response, body: DisconnectDto): Promise<void>;
+    disconnect(res: Response, userCode: string, clientID: string): Promise<void>;
 }
