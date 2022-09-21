@@ -180,10 +180,6 @@ export class AuthorizorService {
 
     if (getUserInfoResult) {
       const userInfo: UserInfoDto = {
-        name: getUserInfoResult.name,
-        birth: getUserInfoResult.birth,
-        gender: getUserInfoResult.gender,
-        email: getUserInfoResult.email,
         userCode: getUserInfoResult.userCode,
       };
 

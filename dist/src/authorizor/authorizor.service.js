@@ -169,10 +169,6 @@ let AuthorizorService = class AuthorizorService {
         const getUserInfoResult = await this.getUserInfoByHash(hash);
         if (getUserInfoResult) {
             const userInfo = {
-                name: getUserInfoResult.name,
-                birth: getUserInfoResult.birth,
-                gender: getUserInfoResult.gender,
-                email: getUserInfoResult.email,
                 userCode: getUserInfoResult.userCode,
             };
             const applicationInfo = await this.applicationRepoitory.findOne({
