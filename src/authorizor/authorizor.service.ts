@@ -271,10 +271,13 @@ export class AuthorizorService {
         select: ['idx'],
       });
 
+      console.log(clientID);
       const application = await this.applicationRepoitory.findOne({
         where: { APIKey: clientID },
         select: ['idx', 'host'],
       });
+
+      console.log(application);
 
       if (!user || !application) {
         return false;
