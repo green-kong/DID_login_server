@@ -247,7 +247,9 @@ export class AuthorizorService {
             refreshToken: tokens.DID_REFRESH_TOKEN,
           },
         );
-
+        await this.cacheManager.set(hash, tokens.DID_ACCESS_TOKEN, {
+          ttl: 60 * 60 * 2,
+        });
         return new TokensDto(
           code,
           tokens.DID_ACCESS_TOKEN,

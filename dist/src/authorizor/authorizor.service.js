@@ -224,6 +224,9 @@ let AuthorizorService = class AuthorizorService {
                 await this.loginRepository.update({ refreshToken: DID_REFRESH_TOKEN }, {
                     refreshToken: tokens.DID_REFRESH_TOKEN,
                 });
+                await this.cacheManager.set(hash, tokens.DID_ACCESS_TOKEN, {
+                    ttl: 60 * 60 * 2,
+                });
                 return new tokens_dto_1.TokensDto(code, tokens.DID_ACCESS_TOKEN, tokens.DID_REFRESH_TOKEN);
             }
         }

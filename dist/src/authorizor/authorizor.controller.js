@@ -92,6 +92,8 @@ let AuthorizorController = class AuthorizorController {
         const { userCode, clientID } = body;
         const disconnectResult = await this.authorizorService.disconnectUser(userCode, clientID);
         if (disconnectResult) {
+            res.cookie('DID_ACCESS_TOKEN', '', { maxAge: 0 });
+            res.cookie('DID_REFRESH_TOKEN', '', { maxAge: 0 });
             res.send(true);
         }
         res.sendStatus(500).send(false);
