@@ -23,7 +23,7 @@
 .alert_icon {
   width: 80px;
   height: 80px;
-  background-image: url('http://localhost:8000/images/alert_icon.png');
+  background-image: url('http://13.124.189.38:8000/images/alert_icon.png');
   background-size: cover;
   margin-bottom: 14px;
 }

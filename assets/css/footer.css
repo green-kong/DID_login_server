@@ -24,6 +24,6 @@
 .footer_logo {
   width: 30px;
   height: 30px;
-  background-image: url('http://localhost:3000/images/logo.png');
+  background-image: url('http://13.124.189.38:8000/images/logo.png');
   background-size: 30px;
 }
