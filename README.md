@@ -23,7 +23,7 @@ DID계정을 이용해 타사이트에서 회원가입 및 로그인이 가능�
 
 ## 🎥 시연 영상
 
-[<img src="https://user-images.githubusercontent.com/96301958/193729101-fa6ad3fe-07d5-4975-8163-91836124dde2.gif" width="80%"/>](https://www.youtube.com/watch?v=TUSVB7_jibI)
+[<img src="https://user-images.githubusercontent.com/96301958/193729101-fa6ad3fe-07d5-4975-8163-91836124dde2.gif" width="80%"/>](https://youtu.be/H7mMynn-67k)
 
 위 이미지를 클릭하면 시연영상으로 이동합니다.
 
